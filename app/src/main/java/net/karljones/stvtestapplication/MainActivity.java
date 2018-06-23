@@ -1,5 +1,6 @@
 package net.karljones.stvtestapplication;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final String DOWNLOAD_LINK = "http://api.stv.tv/articles/?count=50&navigationLevelId=1218&orderBy=ranking+DESC%2C+createdAt+DESC&full=1&count=20";
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
@@ -48,5 +51,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class DownloadStories extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected Void doInBackground (Void... voids) {
+            return null;
+        }
     }
 }
