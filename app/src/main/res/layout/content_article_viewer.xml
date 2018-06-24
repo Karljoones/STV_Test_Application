@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018 Iarratais Development
+  ~
+  ~ karl.development@gmail.com
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ArticleViewer"
+    tools:showIn="@layout/activity_article_viewer"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/content_article_viewer_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:fontFamily="@font/asap"
+        android:gravity="center_horizontal"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_marginTop="4dp"
+        android:background="#FFFFFF"
+        android:id="@+id/content_article_viewer_image"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="150dp" />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        card_view:cardCornerRadius="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <WebView
+                android:id="@+id/content_article_viewer_webview"
+                android:layout_width="match_parent"
+                android:padding="8dp"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>
