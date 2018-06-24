@@ -9,9 +9,11 @@ package net.karljones.stvtestapplication.templates;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.io.Serializable;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Images {
+public class Images implements Serializable {
     private String id;
     private String url;
 
@@ -29,5 +31,9 @@ public class Images {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public boolean hasURl() {
+        return getUrl() != null && !getUrl().equals("");
     }
 }

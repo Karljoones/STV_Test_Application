@@ -12,10 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -51,14 +48,17 @@ public class MainActivity extends AppCompatActivity {
         new DownloadStories().execute();
     }
 
+    /**
+     * Create the adapter for the recycler view, along with inserting this adapter into the recycler
+     * view. This method controls where to send the user once they click on one of the articles in
+     * the list.
+     */
     private void insertInformationToList(){
         mainListAdapter.setClickListener(new ClickListener() {
             @Override
             public void ItemClicked(View v, int position) {
                 Intent viewer = new Intent(MainActivity.this, ArticleViewer.class);
-                viewer.putExtra(ArticleViewer.EXTRA_CONTENT_HTML, articles.get(position).getContentHTML());
-                viewer.putExtra(ArticleViewer.EXTRA_TITLE, articles.get(position).getTitle());
-                viewer.putExtra(ArticleViewer.EXTRA_IMAGE_URL, articles.get(position).getArticleImages().getUrl());
+                viewer.putExtra(ArticleViewer.EXTRA_ARTICLE, articles.get(position));
                 startActivity(viewer);
             }
         });
@@ -70,6 +70,11 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView_list.setAdapter(mainListAdapter);
     }
 
+    /**
+     * The download asynctask retrieves the articles. This retrieves the JSON file from the URL, and
+     * then uses Jackson XML library to parse this into a list of Article objects that the application
+     * can then read.
+     */
     private class DownloadStories extends AsyncTask<Void, Void, Void>{
 
         @Override
@@ -108,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 //                            .get()
 //                            .build();
 
+                    // This is temporary code, originally, the images id was missing from the brief, so this was hosted on my Github page as a workaround for testing.
                     Request imageRequest = new Request.Builder()
                             .url("https://karljoones.github.io/tests/stv/experiment.json")
                             .get()
@@ -118,8 +124,11 @@ public class MainActivity extends AppCompatActivity {
                     if (response.isSuccessful()){
                         String jsonResponse = imageResponse.body().string();
 
+                        // Get the url from the JSON that is passed back.
                         JsonNode root = mapper.readTree(jsonResponse);
                         JsonNode urlNode = root.path("url");
+
+                        // Set the image URL into the article.
                         articles.get(i).getArticleImages().setUrl(urlNode.asText());
                     }
                 }
@@ -135,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
             insertInformationToList();
 
-            // Hide the loading progress bar.
+            // Hide the loading progress bar if there are articles to show.
             if (articles.size() != 0){
                 findViewById(R.id.content_main_loading).setVisibility(View.GONE);
             }

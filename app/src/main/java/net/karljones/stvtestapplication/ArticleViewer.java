@@ -6,73 +6,58 @@
 
 package net.karljones.stvtestapplication;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebView;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import net.karljones.stvtestapplication.templates.Article;
 
 public class ArticleViewer extends AppCompatActivity {
     
-    public static final String EXTRA_CONTENT_HTML = "content_html";
-    public static final String EXTRA_TITLE = "article_title";
-    public static final String EXTRA_IMAGE_URL = "image_url";
+    public static final String EXTRA_ARTICLE = "content_article";
 
     private WebView Webview_content;
+
+    private Article article;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_viewer);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
 
         Webview_content = findViewById(R.id.content_article_viewer_webview);
 
         // Allow the user to press "back" and set the icon of the icon.
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_round_close_white_24px);
-
-        getContentFromIntent(getIntent());
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home: onBackPressed();
-            default: return super.onOptionsItemSelected(item);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_round_close_white_24px);
         }
-    }
 
-    /**
-     * Get the information, such as contentHTML, title and image url from the intent that was pushed
-     * to the activity. This information is then loaded into the correct views and processed
-     * accordingly.
-     * @param intent that was sent to the activity.
-     */
-    private void getContentFromIntent(Intent intent){
-        // If there has been content passed into the activity, show it to the user. Otherwise, finish the activity and advise the user that something has gone wrong
-        if (intent.hasExtra(EXTRA_CONTENT_HTML)) {
-            loadContent(intent.getStringExtra(EXTRA_CONTENT_HTML), intent.getStringExtra(EXTRA_IMAGE_URL));
+        // Get the extras that were passed into the activity.
+        if (getIntent().hasExtra(EXTRA_ARTICLE)) {
+            article = (Article) getIntent().getSerializableExtra(EXTRA_ARTICLE);
         } else {
             Toast.makeText(ArticleViewer.this, getString(R.string.ArticleViewer_error_something_went_wrong), Toast.LENGTH_SHORT).show();
             finish();
         }
 
-        // If there has been a title passed into the viewer, then set it as the title of the activity
-        if (intent.hasExtra(EXTRA_TITLE)){
-            ((TextView)findViewById(R.id.content_article_viewer_title)).setText(intent.getStringExtra(EXTRA_TITLE));
+        // If the article has an image, load it into the HTML
+        if (article.getArticleImages().hasURl()){
+            loadContent(article.getContentHTML(), article.getArticleImages().getUrl());
         } else {
-            findViewById(R.id.content_article_viewer_title).setVisibility(View.GONE);
+            loadContent(article.getContentHTML());
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home: onBackPressed(); return true;
+            default: return super.onOptionsItemSelected(item);
         }
     }
 
@@ -83,7 +68,8 @@ public class ArticleViewer extends AppCompatActivity {
      */
     private void loadContent(String contentHTML, String imageURL){
         // The article image is attached to the top of the HTML here.
-        String htmlContent = "<div style=\"max-width: 100%; height:200px; text-align:center;\"> <img style=\"max-width: 100%; height:200px;\" src=\"" + imageURL + "\"/> </div>";
+        String htmlContent
+                = "<div style=\"max-width: 100%; height:200px; text-align:center;\"> <img style=\"max-width: 100%; height:200px;\" src=\"" + imageURL + "\" alt=\"" + article.getTitle() + "\"/> </div>";
         htmlContent = htmlContent.concat(contentHTML);
 
         // Load the HTML into the webview.
