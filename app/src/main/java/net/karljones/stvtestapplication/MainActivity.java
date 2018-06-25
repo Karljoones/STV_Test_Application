@@ -106,16 +106,8 @@ public class MainActivity extends AppCompatActivity {
 
                 // Step 2: Download the images for the articles
                 for (int i = 0 ; i < articles.size() ; i++){
-
-                    // This is the code for the image requests for the images
-//                    Request imageRequest = new Request.Builder()
-//                            .url(getString(R.string.Link_image_download, articles.get(i).getArticleImages().getId()))
-//                            .get()
-//                            .build();
-
-                    // This is temporary code, originally, the images id was missing from the brief, so this was hosted on my Github page as a workaround for testing.
                     Request imageRequest = new Request.Builder()
-                            .url("https://karljoones.github.io/tests/stv/experiment.json")
+                            .url("http://api.stv.tv/images/316051/rendition/?width=640&height=360")
                             .get()
                             .build();
 

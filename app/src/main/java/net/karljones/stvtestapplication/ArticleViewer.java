@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import net.karljones.stvtestapplication.templates.Article;
@@ -44,6 +45,9 @@ public class ArticleViewer extends AppCompatActivity {
             Toast.makeText(ArticleViewer.this, getString(R.string.ArticleViewer_error_something_went_wrong), Toast.LENGTH_SHORT).show();
             finish();
         }
+
+        // Set the title
+        ((TextView) findViewById(R.id.content_article_viewer_title)).setText(article.getTitle());
 
         // If the article has an image, load it into the HTML
         if (article.getArticleImages().hasURl()){
